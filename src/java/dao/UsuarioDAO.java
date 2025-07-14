@@ -2,6 +2,7 @@ package dao;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import modelo.Usuario;
 import util.Conexion;  // Asegúrate de tener la clase de conexión configurada correctamente
@@ -105,4 +106,33 @@ public class UsuarioDAO {
 
         return resultado;
     }
+// ...
+public boolean actualizarEstadoUsuario(int id, String nuevoEstado) {
+    boolean resultado = false;
+
+    try {
+        List<String> estadosValidos = Arrays.asList("activo", "bloqueado", "inactivo");
+        if (!estadosValidos.contains(nuevoEstado.toLowerCase())) {
+            System.out.println("⚠️ Estado no válido: " + nuevoEstado);
+            return false;
+        }
+
+        Connection conn = Conexion.getConnection();
+        String sql = "UPDATE usuarios SET estado = ? WHERE id = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setString(1, nuevoEstado);
+        ps.setInt(2, id);
+
+        int filasAfectadas = ps.executeUpdate();
+        resultado = filasAfectadas > 0;
+
+        ps.close();
+    } catch (SQLException e) {
+        System.err.println("❌ Error al actualizar el estado del usuario");
+        e.printStackTrace();
+    }
+
+    return resultado;
+}
+
 }

@@ -56,5 +56,17 @@ public class ServicioUsuario {
             return "Error al eliminar usuario: " + e.getMessage();
         }
     }
+    @WebMethod
+public String cambiarEstadoUsuario(int id, String nuevoEstado) {
+    try {
+        UsuarioDAO dao = new UsuarioDAO();
+        boolean exito = dao.actualizarEstadoUsuario(id, nuevoEstado);
+        return exito ? "Estado actualizado correctamente" : "No se pudo actualizar el estado";
+    } catch (Exception e) {
+        e.printStackTrace();
+        return "Error al cambiar el estado: " + e.getMessage();
+    }
+}
+
 
 }
